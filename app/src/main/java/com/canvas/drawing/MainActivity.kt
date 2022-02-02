@@ -1,16 +1,20 @@
 package com.canvas.drawing
 
 import android.Manifest
+import android.R.attr.x
+import android.R.attr.y
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
@@ -62,7 +66,6 @@ class MainActivity : AppCompatActivity() {
                     ).show()
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +82,12 @@ class MainActivity : AppCompatActivity() {
         binding?.save?.setOnClickListener{
            requestStoragePermission()
         }
-
+        binding?.remove?.setOnClickListener{
+            binding?.draw?.setColor("#FFFFFF")
+        }
+        binding?.undo?.setOnClickListener{
+            binding?.draw?.onClickUndo()
+        }
     }
 
     private fun selectColor() {
@@ -89,7 +97,6 @@ class MainActivity : AppCompatActivity() {
         var v = LayoutInflater.from(this).inflate(R.layout.color_selector, null)
         alertDialog.setView(v)
         var view = v.findViewById<LinearLayout>(R.id.main_linear)
-
 
         val rainbow: IntArray = this.getResources().getIntArray(R.array.rainbow)
 
@@ -109,13 +116,13 @@ class MainActivity : AppCompatActivity() {
                 lastView = i
                 imageView.setImageResource(R.drawable.image_border)
                 binding?.draw?.setColor(it.tag.toString())
-                Log.e("vaibhavi","click"+ i)
+                Log.e("vaibhavi","click"+ it.tag.toString())
             }
         }
 
-        alertDialog.setPositiveButton("Ok", { dialogInterface,
-                                              i -> dialogInterface.dismiss()
-        })
+        alertDialog.setPositiveButton("Ok") { dialogInterface, i ->
+            dialogInterface.dismiss()
+        }
 
         dialog = alertDialog.show()
         dialog.show()
@@ -171,6 +178,34 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+/*
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        val p1 = Point()
+        p1.x = x //x co-ordinate where the user touches on the screen
+        p1.y = y
+
+        val image = binding?.draw?.let { getBitmapFromView(it) }
+        when (event?.action) {
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+
+                if (image != null) {
+                    binding?.draw?.floodFill(image, p1, R.color.purple_200,R.color.purple_200)
+                }
+            }
+
+            MotionEvent.ACTION_UP -> {
+
+            }
+            else -> return false
+        }
+        return true
+    }
+*/
 
     //create a method to requestStorage permission
     private fun requestStoragePermission(){
@@ -270,16 +305,15 @@ class MainActivity : AppCompatActivity() {
                      */
 
                     val f = File(
-                        externalCacheDir?.absoluteFile.toString()
-                                + File.separator + "KidDrawingApp_" + System.currentTimeMillis() / 1000 + ".jpg"
+                       /* externalCacheDir?.absoluteFile.toString()*/
+                                "/storage/emulated/0/Android/media"+ File.separator + "KidDrawingApp_" + System.currentTimeMillis() / 1000 + ".jpg"
                     )
                     // Here the Environment : Provides access to environment variables.
                     // getExternalStorageDirectory : returns the primary shared/external storage directory.
                     // absoluteFile : Returns the absolute form of this abstract pathname.
                     // File.separator : The system-dependent default name-separator character. This string contains a single character.
 
-                    val fo =
-                        FileOutputStream(f) // Creates a file output stream to write to the file represented by the specified object.
+                    val fo = FileOutputStream(f) // Creates a file output stream to write to the file represented by the specified object.
                     fo.write(bytes.toByteArray()) // Writes bytes from the specified byte array to this file output stream.
                     fo.close() // Closes this file output stream and releases any system resources associated with this stream. This file output stream may no longer be used for writing bytes.
                     result = f.absolutePath // The file absolute path is return as a result.
@@ -302,6 +336,7 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     result = ""
                     e.printStackTrace()
+                    Log.e("vaibhavi==>","catch"+e.message);
                 }
             }
         }

@@ -23,8 +23,6 @@ class DrawingView1(context: Context, attrs:AttributeSet): View(context,attrs) {
         paintText = Paint()
         paintTriangle = Paint()
         paint8 = Paint()
-
-
     }
 
     override fun onSizeChanged(w: Int, h: Int, wprev: Int, hprev: Int) {

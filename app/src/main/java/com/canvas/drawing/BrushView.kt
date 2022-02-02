@@ -9,8 +9,6 @@ import android.view.View
 
 class BrushView(context: Context,attrs:AttributeSet) : View(context,attrs)  {
     private var radius = 0
-    private var leftv = 10
-    private var topv = 10
     private var circle: Paint? = null
     private var square: Paint? = null
     private var color = Color.BLUE

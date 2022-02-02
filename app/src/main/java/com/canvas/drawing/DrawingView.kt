@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import java.util.*
+
 
 class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
     private var mDrawPath: CustomPath? =
@@ -33,6 +35,7 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
     private var canvas: Canvas? = null
 
     private val mPaths = ArrayList<CustomPath>() // ArrayList for Paths
+    private val mUndoPaths = ArrayList<CustomPath>() // ArrayList for Paths
 
     init {
         setUpDrawing()
@@ -125,6 +128,7 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
                     touchX,
                     touchY
                 ) // Add a line from the last point to the specified point (x,y).
+
             }
 
             MotionEvent.ACTION_UP -> {
@@ -154,6 +158,14 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
         mDrawPaint?.strokeWidth = mBrushSize
     }
 
+    fun onClickUndo() {
+        if (mPaths.size > 0) {
+            mUndoPaths.add(mPaths.removeAt(mPaths.size - 1))
+            invalidate() // Invalidate the whole view. If the view is visible
+        }
+    }
+
+
     // TODO(Step 1 : Creating a function to set the selected color to DrawingView on click of colors in color pallet.)
     /**
      * This function is called when the user desires a color change.
@@ -165,5 +177,45 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
         color = Color.parseColor(newColor)
         mDrawPaint?.color = color
     }
-    internal inner class CustomPath(var color:Int, var brushThickness:Float):Path()
+
+    fun floodFill(
+        image: Bitmap, node: Point, targetColor: Int,
+        replacementColor: Int
+    ) {
+        var node = node
+        val width = image.width
+        val height = image.height
+        if (targetColor != replacementColor) {
+            val queue: LinkedList<Point> = LinkedList<Point>()
+            do {
+                var x = node.x
+                val y = node.y
+                while (x > 0 && image.getPixel(x - 1, y) == targetColor) {
+                    x--
+                }
+                var spanUp = false
+                var spanDown = false
+                while (x < width && image.getPixel(x, y) == targetColor) {
+                    image.setPixel(x, y, replacementColor)
+                    if (!spanUp && y > 0 && image.getPixel(x, y - 1) == targetColor) {
+                        queue.add(Point(x, y - 1))
+                        spanUp = true
+                    } else if (spanUp && y > 0 && image.getPixel(x, y - 1) != targetColor) {
+                        spanUp = false
+                    }
+                    if (!spanDown && y < height - 1 && image.getPixel(x, y + 1) == targetColor) {
+                        queue.add(Point(x, y + 1))
+                        spanDown = true
+                    } else if (spanDown && y < height - 1 && image.getPixel(
+                            x,
+                            y + 1
+                        ) != targetColor
+                    ) {
+                        spanDown = false
+                    }
+                    x++
+                }
+            } while (queue.poll().also { node = it } != null)
+        }
+    }    internal inner class CustomPath(var color:Int, var brushThickness:Float):Path()
 }
