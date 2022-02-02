@@ -6,17 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.canvas.drawing.DrawingView
-        android:id="@+id/draw"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/card_items"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
 
+        <com.canvas.drawing.DrawingView1
+            android:id="@+id/draw1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+    <com.canvas.drawing.DrawingView
+        android:id="@+id/draw"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:visibility="visible"/>
+
+    </LinearLayout>
     <androidx.cardview.widget.CardView
         android:id="@+id/card_items"
         android:layout_width="wrap_content"
@@ -27,35 +42,47 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
-        <ImageView
-            android:id="@+id/brush"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_baseline_brush_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/brush"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_brush_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/black"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:background="@color/black" />
 
-        <ImageView
-            android:id="@+id/color"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_baseline_brightness_1_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/brush" />
+            <ImageView
+                android:id="@+id/color"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_brightness_1_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/brush" />
+
+            <ImageView
+                android:id="@+id/save"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/tringal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/brush" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
