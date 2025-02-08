@@ -1,10 +1,8 @@
 package com.canvas.drawing
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
@@ -12,10 +10,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import kotlin.math.cos
-import kotlin.math.pow
 import kotlin.math.sin
 
-class DrawingView2 @JvmOverloads constructor(
+class DrawingViewSpiral @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
 ) : View(context, attrs)       {

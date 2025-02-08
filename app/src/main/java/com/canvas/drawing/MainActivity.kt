@@ -16,12 +16,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.canvas.drawing.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -87,6 +90,22 @@ class MainActivity : AppCompatActivity() {
         }
         binding?.undo?.setOnClickListener{
             binding?.draw?.onClickUndo()
+        }
+        binding?.redo?.setOnClickListener{
+            binding?.draw?.onClickRedo()
+        }
+        binding?.spiral?.setOnClickListener{
+            if(binding?.draw1?.isVisible == false) {
+                binding?.draw1?.visibility = VISIBLE
+                binding?.draw?.visibility = GONE
+                binding?.spiral?.setImageBitmap(null)
+                binding?.spiral?.setBackgroundResource(R.drawable.baseline_keyboard_command_key_24)
+            }else{
+                binding?.draw1?.visibility = GONE
+                binding?.draw?.visibility = VISIBLE
+                binding?.spiral?.setImageBitmap(null)
+                binding?.spiral?.setBackgroundResource(R.drawable.baseline_draw_24)
+            }
         }
     }
 
